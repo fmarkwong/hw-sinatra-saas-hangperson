@@ -15,7 +15,6 @@ class HangpersonGame
     @guesses = ''
     @wrong_guesses = ''
     @word_with_guesses = word.gsub(/./, '-')
-    @wrong_guess_counter = 0
     @check_win_or_lose = :play
   end
 
@@ -31,14 +30,12 @@ class HangpersonGame
     return false if [@guesses, @wrong_guesses].any? { |g| g.upcase == letter.upcase}
 
     if @word.chars.include? letter
-      # @guesses = letter
       @guesses << letter 
       update_word_with_guesses(letter)
       @check_win_or_lose = :win if !@word_with_guesses.chars.include? '-'
     else
       @wrong_guesses << letter
-      @wrong_guess_counter += 1
-      @check_win_or_lose = :lose if @wrong_guess_counter == 7 
+      @check_win_or_lose = :lose if @wrong_guesses.length == 7 
     end
     
     true
