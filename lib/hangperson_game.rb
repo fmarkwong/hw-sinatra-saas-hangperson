@@ -8,12 +8,15 @@ class HangpersonGame
   # def initialize()
   # end
 
-  attr_accessor :word, :guesses, :wrong_guesses
+  attr_reader :word, :guesses, :wrong_guesses, :word_with_guesses, :check_win_or_lose
   
   def initialize(word)
     @word = word
     @guesses = ''
     @wrong_guesses = ''
+    @word_with_guesses = word.gsub(/./, '-')
+    @wrong_guess_counter = 0
+    @check_win_or_lose = :play
   end
 
   def self.get_random_word
@@ -24,13 +27,25 @@ class HangpersonGame
   end
 
   def guess(letter)
-    if @word.split('').include? letter
-      @guesses = letter
-    else
-      @wrong_guesses = letter
-    end
+    throw ArgumentError if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
+    return false if [@guesses, @wrong_guesses].any? { |g| g.upcase == letter.upcase}
 
+    if @word.chars.include? letter
+      # @guesses = letter
+      @guesses << letter 
+      update_word_with_guesses(letter)
+      @check_win_or_lose = :win if !@word_with_guesses.chars.include? '-'
+    else
+      @wrong_guesses << letter
+      @wrong_guess_counter += 1
+      @check_win_or_lose = :lose if @wrong_guess_counter == 7 
+    end
+    
     true
   end
 
+  def update_word_with_guesses(letter)
+    match_indexes = (0 ... @word.length).find_all { |i| @word[i] == letter }
+    match_indexes.each { |i| @word_with_guesses[i] = letter}
+  end
 end
