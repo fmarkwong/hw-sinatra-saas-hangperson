@@ -14,8 +14,6 @@ class HangpersonGame
     @word = word
     @guesses =  ''
     @wrong_guesses = ''
-    # @eword_with_guesses = word.gsub(/./, '-')
-    # @check_win_or_lose = :play
   end
 
   def self.get_random_word
@@ -32,27 +30,23 @@ class HangpersonGame
 
     if @word.include? letter
       @guesses += letter 
-      # update_word_with_guesses(letter)
     else
       @wrong_guesses += letter
     end
   end
 
   def check_win_or_lose
-      wwg = word_with_guesses
-      return :lose if @wrong_guesses.length == 7 
-      # return :win if !wwg.empty? && (!wwg.include? '-')
-      return :win if wwg == @word 
-      :play
+    return :lose if @wrong_guesses.length == 7 
+    return :win if !@word.empty? && word_with_guesses == @word 
+    :play
   end
 
   def word_with_guesses
-    temp_word = @word.dup
 
-    (0 ... temp_word.length).each do |i|
-      temp_word[i] = '-' if !@guesses.include? temp_word[i]
+    @word.chars.each_with_index.inject(@word.gsub(/./,'-')) do | result, (word_letter, index) |
+      result[index] = word_letter if @guesses.include? word_letter
+      result
     end
-    temp_word
   end
 
   def update_word_with_guesses(letter)
