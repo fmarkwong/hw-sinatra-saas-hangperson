@@ -1,14 +1,9 @@
 class HangpersonGame
-
   # add the necessary class methods, attributes, etc. here
   # to make the tests in spec/hangperson_game_spec.rb pass.
 
   # Get a word from remote "random word" service
-
-  # def initialize()
-  # end
-
-  attr_reader :word, :guesses, :wrong_guesses #, :word_with_guesses
+  attr_reader :word, :guesses, :wrong_guesses
   
   def initialize(word)
     @word = word
@@ -24,15 +19,11 @@ class HangpersonGame
   end
 
   def guess(letter)
-    raise ArgumentError if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
+    raise ArgumentError, 'Invalid Guess' if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
 
-    return false if (@guesses + @wrong_guesses).chars.any? { |g| g.upcase == letter.upcase}
+    return false if (@guesses + @wrong_guesses).upcase.include? letter.upcase
 
-    if @word.include? letter
-      @guesses += letter 
-    else
-      @wrong_guesses += letter
-    end
+    (@word.include? letter) ? @guesses += letter : @wrong_guesses += letter
   end
 
   def check_win_or_lose
@@ -42,15 +33,10 @@ class HangpersonGame
   end
 
   def word_with_guesses
-
     @word.chars.each_with_index.inject(@word.gsub(/./,'-')) do | result, (word_letter, index) |
       result[index] = word_letter if @guesses.include? word_letter
       result
     end
   end
 
-  def update_word_with_guesses(letter)
-    # match_indexes = (0 ... @word.length).find_all { |i| @word[i] == letter }
-    # match_indexes.each { |i| @eword_with_guesses[i] = letter}
-  end
 end
