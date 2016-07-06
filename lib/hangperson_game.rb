@@ -26,16 +26,19 @@ class HangpersonGame
   end
 
   def guess(letter)
-    raise ArgumentError, "Invalid" if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
+    # raise ArgumentError, "Invalid" if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
+    if letter.nil? || letter.empty? || letter !~ /[a-zA-Z]/
+      raise ArgumentError, "Invalid"
+      return :invalid
+    end
+
     return false if [@guesses, @wrong_guesses].any? { |g| g.upcase == letter.upcase}
 
     if @word.chars.include? letter
       @guesses << letter 
       update_word_with_guesses(letter)
-      return :valid
     else
       @wrong_guesses << letter
-      return :invalid
     end
   end
 
